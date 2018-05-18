@@ -19,7 +19,7 @@ class MongoDBConnection(Connection):
 
     def __init__(self, replicaset=None, ssl=None, login=None, password=None,
                  ca_cert=None, certfile=None, keyfile=None,
-                 keyfile_passphrase=None, crlfile=None, **kwargs):
+                 keyfile_passphrase=None, crlfile=None, atlas=None, **kwargs):
         """Create a new Connection instance.
 
         Args:
@@ -39,6 +39,7 @@ class MongoDBConnection(Connection):
         self.keyfile = keyfile or bigchaindb.config['database'].get('keyfile', None)
         self.keyfile_passphrase = keyfile_passphrase or bigchaindb.config['database'].get('keyfile_passphrase', None)
         self.crlfile = crlfile or bigchaindb.config['database'].get('crlfile', None)
+        self.atlas = atlas or bigchaindb.config['database'].get('atlas', None)
 
     @property
     def db(self):
@@ -132,6 +133,12 @@ class MongoDBConnection(Connection):
                 if self.login is not None:
                     client[self.dbname].authenticate(self.login,
                                                      mechanism='MONGODB-X509')
+
+            # Riddle&Code
+            # 2018-05-18
+            # adding parameter "atlas" to the "database" section of the configuration file
+            if self.atlas:
+                client = pymongo.MongoClient(self.atlas)
 
             return client
 

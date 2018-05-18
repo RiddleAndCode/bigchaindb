@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 def connect(backend=None, host=None, port=None, name=None, max_tries=None,
             connection_timeout=None, replicaset=None, ssl=None, login=None, password=None,
             ca_cert=None, certfile=None, keyfile=None, keyfile_passphrase=None,
-            crlfile=None):
+            crlfile=None, atlas=None):
     """Create a new connection to the database backend.
 
     All arguments default to the current configuration's values if not
@@ -63,6 +63,7 @@ def connect(backend=None, host=None, port=None, name=None, max_tries=None,
     keyfile = keyfile or bigchaindb.config['database'].get('keyfile', None)
     keyfile_passphrase = keyfile_passphrase or bigchaindb.config['database'].get('keyfile_passphrase', None)
     crlfile = crlfile or bigchaindb.config['database'].get('crlfile', None)
+    atlas = atlas or bigchaindb.config['database'].get('atlas', None)
 
     try:
         module_name, _, class_name = BACKENDS[backend].rpartition('.')
@@ -78,7 +79,7 @@ def connect(backend=None, host=None, port=None, name=None, max_tries=None,
                  max_tries=max_tries, connection_timeout=connection_timeout,
                  replicaset=replicaset, ssl=ssl, login=login, password=password,
                  ca_cert=ca_cert, certfile=certfile, keyfile=keyfile,
-                 keyfile_passphrase=keyfile_passphrase, crlfile=crlfile)
+                 keyfile_passphrase=keyfile_passphrase, crlfile=crlfile, atlas=atlas)
 
 
 class Connection:
